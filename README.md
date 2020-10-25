@@ -1,4 +1,4 @@
-# nuxt
+# nuxt-youtube
 
 ## Build Setup
 
