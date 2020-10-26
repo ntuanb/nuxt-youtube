@@ -8,7 +8,7 @@
       />
     </form>
 
-    <div class="columns">
+    <div class="columns is-multiline">
       <template v-for="(video, index) in videos">
         <div :key="index" class="column is-one-quarter">
           <VideoCard
@@ -19,16 +19,26 @@
         </div>
       </template>
     </div>
+
+    <client-only>
+      <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+    </client-only>
   </div>
 </template>
 
 <script lang="ts">
+import InfiniteLoading from 'vue-infinite-loading';
 import { Action } from 'vuex-class'
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  components: {
+    InfiniteLoading
+  }
+})
 export default class Search extends Vue {
   videos: Array<any> = [];
+  nextPageToken: string = '';
 
   async mounted() {
     const res = await this.getVideos();
@@ -42,6 +52,22 @@ export default class Search extends Vue {
 
   async search(payload: any) {
     this.$router.push('/search?query=' + payload.query);
+  }
+
+  async infiniteHandler($state: any) {
+    const res = await this.getVideos({
+      pageToken: this.nextPageToken
+    })
+
+    if (!res || !res.items || !res.items.length) {
+      $state.complete();
+      return;
+    }
+
+    this.videos.push(...res.items)
+    this.nextPageToken = res.nextPageToken;
+
+    $state.loaded();
   }
 }
 </script>

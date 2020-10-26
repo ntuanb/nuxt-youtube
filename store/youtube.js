@@ -1,6 +1,6 @@
 const API_KEY = '';
 const CHANNEL_ID = 'UCi8e0iOVk1fEOogdfu4YgfA';
-const MAX_RESULTS = '1';
+const MAX_RESULTS = '5';
 const ORDER = 'viewCount';  
 
 export const api = {
@@ -61,8 +61,6 @@ export const actions = {
       query,
       pageToken
     });
-
-    console.log(response)
 
     return response;
   }

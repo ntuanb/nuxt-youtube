@@ -1,5 +1,9 @@
 # nuxt-youtube
 
+## Requires
+
+- Valid personal Youtube API v3 key
+
 ## Build Setup
 
 ```bash
@@ -14,7 +18,3 @@ Then visit `localhost:3000`
 - Typescript
 - Nuxt
 - Youtube API v3
-
-## Time
-
-- Session 1 - `Time since boot:	1:59`

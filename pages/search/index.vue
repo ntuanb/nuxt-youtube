@@ -1,7 +1,7 @@
 <template>
   <div class="search">
     <div class="search__items">
-      <div class="columns">
+      <div class="columns is-multiline">
         <template v-for="(video, index) in videos">
           <div :key="index" class="column is-one-quarter">
             <VideoCard
@@ -14,7 +14,9 @@
       </div>
     </div>
 
-    <infinite-loading @infinite="infinite"></infinite-loading>
+    <client-only>
+      <infinite-loading @infinite="infiniteHandler"></infinite-loading>
+    </client-only>
   </div>
 </template>
 
@@ -57,18 +59,21 @@ export default class Search extends Vue {
     return await this.getVideos(payload);
   }
 
-  async infinite() {
+  async infiniteHandler($state: any) {
     const res = await this.getVideos({
       query: this.queryModel,
       pageToken: this.nextPageToken
     })
 
-    this.videos = {
-      ...this.videos,
-      ...res.items
+    if (!res || !res.items || !res.items.length) {
+      $state.complete();
+      return;
     }
 
+    this.videos.push(...res.items)
     this.nextPageToken = res.nextPageToken;
+
+    $state.loaded();
   }
 }
 </script>
